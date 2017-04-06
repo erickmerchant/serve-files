@@ -1,5 +1,4 @@
-'use strict'
-
+#!/usr/bin/env node
 const command = require('sergeant')
 const express = require('express')
 const morgan = require('morgan')
