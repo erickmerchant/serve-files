@@ -20,7 +20,7 @@ command('serve-files', function ({parameter, option}) {
   return function (args) {
     const app = express()
 
-    app.use(morgan(chalk.green('\u276F') + ' :method :url ' + chalk.gray(':status')))
+    app.use(morgan(chalk.gray('\u276F') + ' :method :url :status'))
 
     app.use(express.static(args.destination))
 
@@ -47,7 +47,7 @@ command('serve-files', function ({parameter, option}) {
     })
 
     app.listen(args.port, function () {
-      console.log(chalk.green('\u2714') + ' server is running at %s', chalk.gray(args.port))
+      console.log(chalk.green('\u2714') + ' server is running at %s', args.port)
     })
   }
 })(process.argv.slice(2))
