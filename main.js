@@ -2,6 +2,7 @@
 const command = require('sergeant')
 const express = require('express')
 const morgan = require('morgan')
+const compression = require('compression')
 const chalk = require('chalk')
 const path = require('path')
 
@@ -17,32 +18,32 @@ command('serve-files', function ({parameter, option}) {
     type: Number
   })
 
+  option('default', {
+    description: 'the default response',
+    default: 404,
+    type: Number
+  })
+
   return function (args) {
     const app = express()
 
     app.use(morgan(chalk.gray('\u276F') + ' :method :url :status'))
 
+    app.use(compression())
+
     app.use(express.static(args.destination))
 
     app.use(function (req, res) {
       if (req.accepts('html')) {
-        res.status(200)
+        res.status(args.default)
 
-        res.sendFile(path.resolve(args.destination, '200.html'), {}, function (err) {
+        res.sendFile(path.resolve(args.destination, args.default + '.html'), {}, function (err) {
           if (err) {
-            res.status(404)
-
-            res.sendFile(path.resolve(args.destination, '404.html'), {}, function (err) {
-              if (err) {
-                res.type('txt').send('Not found')
-              }
-            })
+            blank(res)
           }
         })
       } else {
-        res.status(404)
-
-        res.type('txt').send('Not found')
+        blank(res)
       }
     })
 
@@ -51,3 +52,9 @@ command('serve-files', function ({parameter, option}) {
     })
   }
 })(process.argv.slice(2))
+
+function blank (res) {
+  res.status(404)
+
+  res.type('txt').send('')
+}
