@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/erickmerchant/serve-files#readme",
   "dependencies": {
-    "chalk": "^1.1.3",
+    "chalk": "^2.0.1",
     "compression": "^1.6.2",
     "express": "^4.15.2",
     "morgan": "^1.8.1",
