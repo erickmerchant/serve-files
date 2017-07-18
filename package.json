@@ -1,7 +1,7 @@
 {
   "name": "@erickmerchant/serve-files",
   "version": "2.0.5",
-  "description": "",
+  "description": "A simple static file server for development",
   "bin": {
     "serve-files": "./main.js"
   },
@@ -23,7 +23,7 @@
     "compression": "^1.6.2",
     "express": "^4.15.2",
     "morgan": "^1.8.1",
-    "sergeant": "^15.4.4"
+    "sergeant": "^15.4.7"
   },
   "devDependencies": {
     "standard": "^10.0.0"
