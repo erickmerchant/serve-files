@@ -7,7 +7,7 @@ const chalk = require('chalk')
 const path = require('path')
 
 command('serve-files', function ({parameter, option}) {
-  parameter('destination', {
+  parameter('directory', {
     description: 'the directory to serve files from',
     default: '.'
   })
@@ -31,13 +31,13 @@ command('serve-files', function ({parameter, option}) {
 
     app.use(compression())
 
-    app.use(express.static(args.destination))
+    app.use(express.static(args.directory))
 
     app.use(function (req, res) {
       if (req.accepts('html')) {
         res.status(args.default)
 
-        res.sendFile(path.resolve(args.destination, args.default + '.html'), {}, function (err) {
+        res.sendFile(path.resolve(args.directory, args.default + '.html'), {}, function (err) {
           if (err) {
             blank(res)
           }
