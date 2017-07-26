@@ -9,7 +9,7 @@ const path = require('path')
 command('serve-files', function ({parameter, option}) {
   parameter('destination', {
     description: 'the directory to serve files from',
-    required: true
+    default: '.'
   })
 
   option('port', {
