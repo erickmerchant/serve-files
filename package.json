@@ -26,6 +26,6 @@
     "sergeant": "^15.4.8"
   },
   "devDependencies": {
-    "standard": "^10.0.0"
+    "standard": "^10.0.3"
   }
 }
