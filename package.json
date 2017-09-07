@@ -23,7 +23,7 @@
     "compression": "^1.6.2",
     "express": "^4.15.4",
     "morgan": "^1.8.1",
-    "sergeant": "^15.4.10"
+    "sergeant": "^15.4.11"
   },
   "devDependencies": {
     "standard": "^10.0.3"
