@@ -21,7 +21,7 @@
   "dependencies": {
     "chalk": "^2.1.0",
     "compression": "^1.6.2",
-    "express": "^4.15.4",
+    "express": "^4.15.5",
     "morgan": "^1.8.1",
     "sergeant": "^15.4.11"
   },
