@@ -3,6 +3,8 @@ const command = require('sergeant')
 const express = require('express')
 const morgan = require('morgan')
 const compression = require('compression')
+const getPort = require('get-port')
+const opn = require('opn')
 const chalk = require('chalk')
 const path = require('path')
 
@@ -14,8 +16,13 @@ command('serve-files', function ({parameter, option}) {
 
   option('port', {
     description: 'the port to listen at',
-    default: 8000,
     type: Number
+  })
+
+  option('open', {
+    description: 'open the localhost:port',
+    default: false,
+    type: Boolean
   })
 
   option('default', {
@@ -27,34 +34,32 @@ command('serve-files', function ({parameter, option}) {
   return function (args) {
     const app = express()
 
-    app.use(morgan(chalk.gray('\u276F') + ' :method :url :status'))
+    app.use(morgan(chalk.green('\u276F') + ' :method :url ' + chalk.gray(':status')))
 
     app.use(compression())
 
     app.use(express.static(args.directory))
 
     app.use(function (req, res) {
-      if (req.accepts('html')) {
-        res.status(args.default)
+      res.status(args.default)
 
-        res.sendFile(path.resolve(args.directory, args.default + '.html'), {}, function (err) {
-          if (err) {
-            blank(res)
-          }
-        })
-      } else {
-        blank(res)
-      }
+      res.sendFile(path.resolve(args.directory, args.default + '.html'), {}, function (err) {
+        if (err) {
+          res.type('text/plain').send('')
+        }
+      })
     })
 
-    app.listen(args.port, function () {
-      console.log(chalk.green('\u2714') + ' server is running at %s', args.port)
+    const portPromise = args.port != null ? Promise.resolve(args.port) : getPort()
+
+    portPromise.then(function (port) {
+      app.listen(port, function () {
+        console.log(chalk.green('\u276F') + ' server is listening at port %s', port)
+
+        if (args.open) {
+          opn(`http://localhost:${port}`)
+        }
+      })
     })
   }
 })(process.argv.slice(2))
-
-function blank (res) {
-  res.status(404)
-
-  res.type('txt').send('')
-}
