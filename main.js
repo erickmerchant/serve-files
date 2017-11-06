@@ -20,13 +20,13 @@ command('serve-files', function ({parameter, option}) {
   })
 
   option('open', {
-    description: 'open the localhost:port',
+    description: 'open it',
     default: false,
     type: Boolean
   })
 
   option('default', {
-    description: 'the default response',
+    description: 'the default response status',
     default: 404,
     type: Number
   })
