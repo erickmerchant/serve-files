@@ -6,7 +6,8 @@
     "serve-files": "./main.js"
   },
   "scripts": {
-    "test": "standard"
+    "test": "standard && tape test.js | faucet",
+    "cover": "nyc --reporter=html npm test"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,9 @@
     "sergeant": "^15.5.1"
   },
   "devDependencies": {
-    "standard": "^10.0.3"
+    "faucet": "0.0.1",
+    "nyc": "^11.3.0",
+    "standard": "^10.0.3",
+    "tape": "^4.8.0"
   }
 }
