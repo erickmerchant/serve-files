@@ -16,7 +16,14 @@ command('serve-files', function ({parameter, option}) {
 
   option('port', {
     description: 'the port to listen at',
-    type: Number
+    default: 'random',
+    type: function Port (port) {
+      if (port === 'random') {
+        return getPort()
+      }
+
+      return Promise.resolve(Number(port))
+    }
   })
 
   option('open', {
@@ -49,9 +56,7 @@ command('serve-files', function ({parameter, option}) {
       })
     })
 
-    const portPromise = args.port != null ? Promise.resolve(args.port) : getPort()
-
-    portPromise.then(function (port) {
+    args.port.then(function (port) {
       app.listen(port, function () {
         console.log(chalk.green('\u276F') + ' server is listening at port %s', port)
 
