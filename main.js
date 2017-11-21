@@ -21,7 +21,6 @@ command('serve-files', function ({parameter, option}) {
 
   option('open', {
     description: 'open it',
-    default: false,
     type: Boolean
   })
 
