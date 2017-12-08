@@ -11,19 +11,13 @@ const path = require('path')
 command('serve-files', function ({parameter, option}) {
   parameter('directory', {
     description: 'the directory to serve files from',
-    default: '.'
+    default: { value: '.' }
   })
 
   option('port', {
     description: 'the port to listen at',
-    default: 'random',
-    type: function Port (port) {
-      if (port === 'random') {
-        return getPort()
-      }
-
-      return Promise.resolve(Number(port))
-    }
+    default: { text: 'a random port', value: false },
+    type: Number
   })
 
   option('open', {
@@ -33,11 +27,19 @@ command('serve-files', function ({parameter, option}) {
 
   option('default', {
     description: 'the default response status',
-    default: 404,
+    default: { value: 404 },
     type: Number
   })
 
   return function (args) {
+    let port
+
+    if (!args.port) {
+      port = getPort()
+    } else {
+      port = Promise.resolve(Number(args.port))
+    }
+
     const app = express()
 
     app.use(morgan(chalk.green('\u276F') + ' :method :url ' + chalk.gray(':status')))
@@ -56,7 +58,7 @@ command('serve-files', function ({parameter, option}) {
       })
     })
 
-    args.port.then(function (port) {
+    port.then(function (port) {
       app.listen(port, function () {
         console.log(chalk.green('\u276F') + ' server is listening at port %s', port)
 
