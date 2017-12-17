@@ -17,7 +17,7 @@ const noopDefiners = {
   option: () => {}
 }
 
-test('options and parameters', function (t) {
+test('index.js - options and parameters', function (t) {
   t.plan(10)
 
   const parameters = {}
@@ -53,7 +53,7 @@ test('options and parameters', function (t) {
   t.equal(options.default.type, Number)
 })
 
-test('good response', function (t) {
+test('index.js - good response', function (t) {
   t.plan(3)
 
   getPort().then(async (port) => {
@@ -75,7 +75,7 @@ test('good response', function (t) {
   })
 })
 
-test('default response', function (t) {
+test('index.js - default response', function (t) {
   t.plan(3)
 
   getPort().then(async (port) => {
@@ -99,7 +99,7 @@ test('default response', function (t) {
   })
 })
 
-test('default does not exist', function (t) {
+test('index.js - default does not exist', function (t) {
   t.plan(3)
 
   getPort().then(async (port) => {
@@ -123,7 +123,7 @@ test('default does not exist', function (t) {
   })
 })
 
-test('default no html', function (t) {
+test('index.js - default no html', function (t) {
   t.plan(3)
 
   getPort().then(async (port) => {
@@ -147,7 +147,7 @@ test('default no html', function (t) {
   })
 })
 
-test('get port', async function (t) {
+test('index.js - get port', async function (t) {
   t.plan(1)
 
   const app = await require('./index')(noopDeps)(noopDefiners)({port: false, directory: './fixtures/', default: 404})
@@ -165,19 +165,19 @@ test('get port', async function (t) {
   })
 })
 
-test('get port, open in browser', async function (t) {
+test('index.js - open in browser', async function (t) {
   t.plan(2)
 
-  const app = await require('./index')({
-    out,
-    opener: function (url) {
-      t.equal(url, `http://localhost:${app.address().port}`)
-    }
-  })(noopDefiners)({port: false, directory: './fixtures/', default: 404, open: true})
+  getPort().then(async (port) => {
+    const app = await require('./index')({
+      out,
+      opener: function (url) {
+        t.equal(url, `http://localhost:${port}`)
+      }
+    })(noopDefiners)({port, directory: './fixtures/', default: 404, open: true})
 
-  process.nextTick(async () => {
     try {
-      const response = await got(`http://localhost:${app.address().port}/`)
+      const response = await got(`http://localhost:${port}/`)
 
       t.equal('<h1>index</h1>\n', response.body)
     } catch (e) {
@@ -188,7 +188,7 @@ test('get port, open in browser', async function (t) {
   })
 })
 
-test('output', async function (t) {
+test('index.js - output', async function (t) {
   t.plan(1)
 
   const out = new stream.Writable()
@@ -221,7 +221,7 @@ test('output', async function (t) {
   })
 })
 
-test('integration w/ sergeant', async function (t) {
+test('cli.js', async function (t) {
   t.plan(4)
 
   try {
