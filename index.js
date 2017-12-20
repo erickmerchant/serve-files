@@ -67,7 +67,7 @@ module.exports = function (deps) {
           deps.out.write(`${chalk.green('\u276F')} server is listening at port ${port}\n`)
 
           if (args.open) {
-            deps.opener(`http://localhost:${port}`)
+            deps.open(`http://localhost:${port}`)
           }
         })
       })
