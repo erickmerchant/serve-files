@@ -4,8 +4,15 @@ const compression = require('compression')
 const getPort = require('get-port')
 const chalk = require('chalk')
 const path = require('path')
+const assert = require('assert')
 
 module.exports = function (deps) {
+  assert.ok(deps.out)
+
+  assert.equal(typeof deps.out.write, 'function')
+
+  assert.equal(typeof deps.open, 'function')
+
   return function ({parameter, option}) {
     parameter('directory', {
       description: 'the directory to serve files from',
