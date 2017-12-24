@@ -6,15 +6,15 @@ const getPort = require('get-port')
 const stream = require('stream')
 const out = new stream.Writable()
 
-out._write = () => { }
+out._write = () => {}
 
 const noopDeps = {
   out,
-  open: () => {}
+  open () {}
 }
 const noopDefiners = {
-  parameter: () => {},
-  option: () => {}
+  parameter () {},
+  option () {}
 }
 
 test('index.js - options and parameters', function (t) {
@@ -24,10 +24,10 @@ test('index.js - options and parameters', function (t) {
   const options = {}
 
   require('./index')(noopDeps)({
-    parameter: (name, args) => {
+    parameter (name, args) {
       parameters[name] = args
     },
-    option: (name, args) => {
+    option (name, args) {
       options[name] = args
     }
   })
@@ -56,7 +56,7 @@ test('index.js - options and parameters', function (t) {
 test('index.js - good response', function (t) {
   t.plan(3)
 
-  getPort().then(async (port) => {
+  getPort().then(async function (port) {
     const app = await require('./index')(noopDeps)(noopDefiners)({port, directory: './fixtures/', default: 404})
 
     try {
@@ -78,7 +78,7 @@ test('index.js - good response', function (t) {
 test('index.js - default response', function (t) {
   t.plan(3)
 
-  getPort().then(async (port) => {
+  getPort().then(async function (port) {
     const app = await require('./index')(noopDeps)(noopDefiners)({port, directory: './fixtures/', default: 404})
 
     try {
@@ -102,7 +102,7 @@ test('index.js - default response', function (t) {
 test('index.js - default does not exist', function (t) {
   t.plan(3)
 
-  getPort().then(async (port) => {
+  getPort().then(async function (port) {
     const app = await require('./index')(noopDeps)(noopDefiners)({port, directory: './fixtures/', default: 400})
 
     try {
@@ -126,7 +126,7 @@ test('index.js - default does not exist', function (t) {
 test('index.js - default no html', function (t) {
   t.plan(3)
 
-  getPort().then(async (port) => {
+  getPort().then(async function (port) {
     const app = await require('./index')(noopDeps)(noopDefiners)({port, directory: './fixtures/', default: 404})
 
     try {
@@ -152,7 +152,7 @@ test('index.js - get port', async function (t) {
 
   const app = await require('./index')(noopDeps)(noopDefiners)({port: false, directory: './fixtures/', default: 404})
 
-  process.nextTick(async () => {
+  process.nextTick(async function () {
     try {
       const response = await got(`http://localhost:${app.address().port}/`)
 
@@ -168,10 +168,10 @@ test('index.js - get port', async function (t) {
 test('index.js - open in browser', async function (t) {
   t.plan(2)
 
-  getPort().then(async (port) => {
+  getPort().then(async function (port) {
     const app = await require('./index')({
       out,
-      open: function (url) {
+      open (url) {
         t.equal(url, `http://localhost:${port}`)
       }
     })(noopDefiners)({port, directory: './fixtures/', default: 404, open: true})
@@ -194,16 +194,16 @@ test('index.js - output', async function (t) {
   const out = new stream.Writable()
   const output = []
 
-  out._write = (line, encoding, done) => {
+  out._write = function (line, encoding, done) {
     output.push(line.toString('utf8'))
 
     done()
   }
 
-  getPort().then(async (port) => {
+  getPort().then(async function (port) {
     const app = await require('./index')({
       out,
-      open: () => { }
+      open () {}
     })(noopDefiners)({port, directory: './fixtures/', default: 404})
 
     try {
