@@ -27,7 +27,13 @@ module.exports = function (deps) {
 
     option('open', {
       description: 'open it',
-      type: Boolean
+      type: function Browser (value) {
+        return value
+      },
+      default: {
+        text: 'default browser',
+        value: true
+      }
     })
 
     option('default', {
@@ -74,7 +80,13 @@ module.exports = function (deps) {
           deps.out.write(`${chalk.green('\u276F')} server is listening at port ${port}\n`)
 
           if (args.open) {
-            deps.open(`http://localhost:${port}`)
+            const options = {}
+
+            if (typeof args.open !== 'boolean') {
+              options.app = args.open
+            }
+
+            deps.open(`http://localhost:${port}`, options)
           }
         })
       })

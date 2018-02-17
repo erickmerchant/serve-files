@@ -44,7 +44,7 @@ test('index.js - options and parameters', function (t) {
 
   t.ok(options.open)
 
-  t.equal(options.open.type, Boolean)
+  t.equal(options.open.type.name, 'Browser')
 
   t.ok(options.default)
 
