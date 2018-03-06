@@ -20,13 +20,13 @@
   },
   "homepage": "https://github.com/erickmerchant/serve-files#readme",
   "dependencies": {
-    "chalk": "^2.3.1",
+    "chalk": "^2.3.2",
     "compression": "^1.7.2",
     "express": "^4.16.2",
     "get-port": "^3.2.0",
     "morgan": "^1.9.0",
     "opn": "^5.2.0",
-    "sergeant": "^17.2.3"
+    "sergeant": "^17.2.4"
   },
   "devDependencies": {
     "execa": "^0.9.0",
