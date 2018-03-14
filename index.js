@@ -62,15 +62,17 @@ module.exports = function (deps) {
       app.use(express.static(args.directory))
 
       app.use(function (req, res) {
-        res.status(args.default)
-
         if (req.accepts(['text/plain', 'text/html']) === 'text/html') {
+          res.status(args.default)
+
           res.sendFile(path.resolve(args.directory, args.default + '.html'), {}, function (err) {
             if (err) {
               res.type('text/html').send('')
             }
           })
         } else {
+          res.status(404)
+
           res.type('text/plain').send('')
         }
       })
