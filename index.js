@@ -28,11 +28,7 @@ module.exports = function (deps) {
     option('open', {
       description: 'open it',
       type: function Browser (value) {
-        return value
-      },
-      default: {
-        text: 'default browser',
-        value: true
+        return value !== '' ? value : true
       }
     })
 
@@ -84,7 +80,7 @@ module.exports = function (deps) {
           if (args.open) {
             const options = {}
 
-            if (typeof args.open !== 'boolean') {
+            if (args.open !== true) {
               options.app = args.open
             }
 
