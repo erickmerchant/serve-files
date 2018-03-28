@@ -84,7 +84,9 @@ module.exports = function (deps) {
               options.app = args.open
             }
 
-            deps.open(`http://localhost:${port}`, options)
+            deps.open(`http://localhost:${port}`, options).catch(function () {
+              console.error(`${chalk.red('\u2718')} Unable to open ${args.open !== true ? args.open : 'default browser'}`)
+            })
           }
         })
       })

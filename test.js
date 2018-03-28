@@ -10,7 +10,7 @@ out._write = () => {}
 
 const noopDeps = {
   out,
-  open () {}
+  open () { return Promise.resolve() }
 }
 const noopDefiners = {
   parameter () {},
@@ -173,6 +173,8 @@ test('index.js - open in browser', async function (t) {
       out,
       open (url) {
         t.equal(url, `http://localhost:${port}`)
+
+        return Promise.resolve()
       }
     })(noopDefiners)({port, directory: './fixtures/', default: 404, open: true})
 
@@ -203,7 +205,7 @@ test('index.js - output', async function (t) {
   getPort().then(async function (port) {
     const app = await require('./index')({
       out,
-      open () {}
+      open () { return Promise.resolve() }
     })(noopDefiners)({port, directory: './fixtures/', default: 404})
 
     try {
