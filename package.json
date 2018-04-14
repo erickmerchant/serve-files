@@ -1,6 +1,6 @@
 {
   "name": "@erickmerchant/serve-files",
-  "version": "4.0.4",
+  "version": "4.1.0",
   "description": "A simple static file server for development",
   "main": "index.js",
   "bin": {
