@@ -27,9 +27,7 @@ module.exports = function (deps) {
 
     option('open', {
       description: 'open it',
-      type: function Browser (value) {
-        return value !== '' ? value : true
-      }
+      type: Boolean
     })
 
     option('default', {
@@ -80,12 +78,8 @@ module.exports = function (deps) {
           if (args.open) {
             const options = {}
 
-            if (args.open !== true) {
-              options.app = args.open
-            }
-
             deps.open(`http://localhost:${port}`, options).catch(function () {
-              console.error(`${chalk.red('\u2718')} Unable to open ${args.open !== true ? args.open : 'default browser'}`)
+              console.error(`${chalk.red('\u2718')} Unable to open`)
             })
           }
         })
