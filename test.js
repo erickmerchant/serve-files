@@ -18,7 +18,7 @@ const noopDefiners = {
 }
 
 test('index.js - options and parameters', function (t) {
-  t.plan(10)
+  t.plan(8)
 
   const parameters = {}
   const options = {}
@@ -34,21 +34,17 @@ test('index.js - options and parameters', function (t) {
 
   t.ok(parameters.directory)
 
-  t.equal(parameters.directory.default, '.')
+  t.equal(parameters.directory.type(), '.')
 
   t.ok(options.port)
-
-  t.equal(options.port.default, false)
 
   t.equal(options.port.type.name, 'number')
 
   t.ok(options.open)
 
-  t.equal(options.open.default, false)
-
   t.ok(options.default)
 
-  t.equal(options.default.default, 404)
+  t.equal(options.default.type(), 404)
 
   t.equal(options.default.type.name, 'number')
 })

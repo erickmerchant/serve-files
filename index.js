@@ -6,8 +6,12 @@ const chalk = require('chalk')
 const path = require('path')
 const assert = require('assert')
 
-function number (val) {
-  return Number(val)
+function numberFactory (_default) {
+  return function number (val) {
+    if (val == null) return _default
+
+    return Number(val)
+  }
 }
 
 module.exports = function (deps) {
@@ -20,24 +24,27 @@ module.exports = function (deps) {
   return function ({parameter, option}) {
     parameter('directory', {
       description: 'the directory to serve files from',
-      default: '.'
+      type: function (val) {
+        if (val == null) {
+          return '.'
+        }
+
+        return val
+      }
     })
 
     option('port', {
       description: 'the port to listen at',
-      default: false,
-      type: number
+      type: numberFactory(null)
     })
 
     option('open', {
-      description: 'open it',
-      default: false
+      description: 'open it'
     })
 
     option('default', {
       description: 'the default response status',
-      default: 404,
-      type: number
+      type: numberFactory(404)
     })
 
     return function (args) {
