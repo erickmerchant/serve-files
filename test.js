@@ -34,23 +34,23 @@ test('index.js - options and parameters', function (t) {
 
   t.ok(parameters.directory)
 
-  t.equal(parameters.directory.default.value, '.')
+  t.equal(parameters.directory.default, '.')
 
   t.ok(options.port)
 
-  t.equal(options.port.default.value, false)
+  t.equal(options.port.default, false)
 
-  t.equal(options.port.type, Number)
+  t.equal(options.port.type.name, 'number')
 
   t.ok(options.open)
 
-  t.equal(options.open.type.name, 'Boolean')
+  t.equal(options.open.default, false)
 
   t.ok(options.default)
 
-  t.equal(options.default.default.value, 404)
+  t.equal(options.default.default, 404)
 
-  t.equal(options.default.type, Number)
+  t.equal(options.default.type.name, 'number')
 })
 
 test('index.js - good response', function (t) {
