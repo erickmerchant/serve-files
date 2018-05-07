@@ -6,14 +6,6 @@ const chalk = require('chalk')
 const path = require('path')
 const assert = require('assert')
 
-function numberFactory (_default) {
-  return function number (val) {
-    if (val == null) return _default
-
-    return Number(val)
-  }
-}
-
 module.exports = function (deps) {
   assert.ok(deps.out)
 
@@ -35,20 +27,31 @@ module.exports = function (deps) {
 
     option('port', {
       description: 'the port to listen at',
-      type: numberFactory(null)
+      type: function number (val) {
+        return Number(val)
+      }
     })
 
     option('open', {
       description: 'open it'
     })
 
-    option('default', {
-      description: 'the default response status',
-      type: numberFactory(404)
+    option('200', {
+      description: 'serve the index page for html responses'
     })
 
     return function (args) {
+      let status
+      let file
       let port
+
+      if (args['200']) {
+        status = 200
+        file = 'index.html'
+      } else {
+        status = 404
+        file = '404.html'
+      }
 
       if (!args.port) {
         port = getPort()
@@ -68,9 +71,9 @@ module.exports = function (deps) {
 
       app.use(function (req, res) {
         if (req.accepts(['text/plain', 'text/html']) === 'text/html') {
-          res.status(args.default)
+          res.status(status)
 
-          res.sendFile(path.resolve(args.directory, args.default + '.html'), {}, function (err) {
+          res.sendFile(path.resolve(args.directory, file), {}, function (err) {
             if (err) {
               res.type('text/html').send('')
             }

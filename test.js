@@ -18,7 +18,7 @@ const noopDefiners = {
 }
 
 test('index.js - options and parameters', function (t) {
-  t.plan(8)
+  t.plan(6)
 
   const parameters = {}
   const options = {}
@@ -42,18 +42,14 @@ test('index.js - options and parameters', function (t) {
 
   t.ok(options.open)
 
-  t.ok(options.default)
-
-  t.equal(options.default.type(), 404)
-
-  t.equal(options.default.type.name, 'number')
+  t.ok(options['200'])
 })
 
 test('index.js - good response', function (t) {
   t.plan(3)
 
   getPort().then(async function (port) {
-    const app = await require('./index')(noopDeps)(noopDefiners)({port, directory: './fixtures/', default: 404})
+    const app = await require('./index')(noopDeps)(noopDefiners)({port, directory: './fixtures/'})
 
     try {
       const response = await got(`http://localhost:${port}/`)
@@ -75,7 +71,7 @@ test('index.js - default response', function (t) {
   t.plan(3)
 
   getPort().then(async function (port) {
-    const app = await require('./index')(noopDeps)(noopDefiners)({port, directory: './fixtures/', default: 404})
+    const app = await require('./index')(noopDeps)(noopDefiners)({port, directory: './fixtures/'})
 
     try {
       await got(`http://localhost:${port}/does-not-exist.html`, {
@@ -95,25 +91,23 @@ test('index.js - default response', function (t) {
   })
 })
 
-test('index.js - default does not exist', function (t) {
+test('index.js - default 200', function (t) {
   t.plan(3)
 
   getPort().then(async function (port) {
-    const app = await require('./index')(noopDeps)(noopDefiners)({port, directory: './fixtures/', default: 400})
+    const app = await require('./index')(noopDeps)(noopDefiners)({port, directory: './fixtures/', '200': true})
 
-    try {
-      await got(`http://localhost:${port}/does-not-exist.html`, {
-        headers: {
-          accept: 'text/html,*,*'
-        }
-      })
-    } catch (e) {
-      t.equal(400, e.response.statusCode)
+    const response = await got(`http://localhost:${port}/does-not-exist.html`, {
+      headers: {
+        accept: 'text/html,*,*'
+      }
+    })
 
-      t.equal('text/html; charset=utf-8', e.response.headers['content-type'].toLowerCase())
+    t.equal(200, response.statusCode)
 
-      t.equal('', e.response.body)
-    }
+    t.equal('text/html; charset=utf-8', response.headers['content-type'].toLowerCase())
+
+    t.equal('<h1>index</h1>\n', response.body)
 
     app.close()
   })
@@ -123,7 +117,7 @@ test('index.js - default no html', function (t) {
   t.plan(3)
 
   getPort().then(async function (port) {
-    const app = await require('./index')(noopDeps)(noopDefiners)({port, directory: './fixtures/', default: 404})
+    const app = await require('./index')(noopDeps)(noopDefiners)({port, directory: './fixtures/'})
 
     try {
       await got(`http://localhost:${port}/does-not-exist.html`, {
@@ -146,7 +140,7 @@ test('index.js - default no html', function (t) {
 test('index.js - get port', async function (t) {
   t.plan(1)
 
-  const app = await require('./index')(noopDeps)(noopDefiners)({port: false, directory: './fixtures/', default: 404})
+  const app = await require('./index')(noopDeps)(noopDefiners)({port: false, directory: './fixtures/'})
 
   process.nextTick(async function () {
     try {
@@ -172,7 +166,7 @@ test('index.js - open in browser', async function (t) {
 
         return Promise.resolve()
       }
-    })(noopDefiners)({port, directory: './fixtures/', default: 404, open: true})
+    })(noopDefiners)({port, directory: './fixtures/', open: true})
 
     try {
       const response = await got(`http://localhost:${port}/`)
@@ -202,7 +196,7 @@ test('index.js - output', async function (t) {
     const app = await require('./index')({
       out,
       open () { return Promise.resolve() }
-    })(noopDefiners)({port, directory: './fixtures/', default: 404})
+    })(noopDefiners)({port, directory: './fixtures/'})
 
     try {
       await got(`http://localhost:${app.address().port}/`)
