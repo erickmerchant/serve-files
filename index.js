@@ -28,6 +28,10 @@ module.exports = function (deps) {
     option('port', {
       description: 'the port to listen at',
       type: function number (val) {
+        if (val == null) {
+          return null
+        }
+
         return Number(val)
       }
     })
