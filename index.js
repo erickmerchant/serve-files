@@ -5,6 +5,7 @@ const getPort = require('get-port')
 const chalk = require('chalk')
 const path = require('path')
 const assert = require('assert')
+const error = require('sergeant/error')
 
 module.exports = function (deps) {
   assert.ok(deps.out)
@@ -65,7 +66,7 @@ module.exports = function (deps) {
 
       const app = express()
 
-      app.use(morgan(chalk.green('\u276F') + ' :method :url ' + chalk.gray(':status'), {
+      app.use(morgan(`${chalk.gray('[serve-files]')} ${chalk.green('\u276F')} :method :url :status`, {
         stream: deps.out
       }))
 
@@ -90,17 +91,22 @@ module.exports = function (deps) {
       })
 
       return port.then(function (port) {
-        return app.listen(port, function () {
-          deps.out.write(`${chalk.green('\u276F')} server is listening at port ${port}\n`)
+        return app.listen(port, function (err) {
+          if (err) {
+            error(err)
+
+            return
+          }
+
+          deps.out.write(`${chalk.gray('[serve-files]')} ${chalk.green('\u276F')} server is listening at port ${port}\n`)
 
           if (args.open) {
             const options = {}
 
-            deps.open(`http://localhost:${port}`, options).catch(function () {
-              console.error(`${chalk.red('\u2718')} Unable to open`)
-            })
+            deps.open(`http://localhost:${port}`, options).catch(error)
           }
         })
+          .on('error', error)
       })
     }
   }
