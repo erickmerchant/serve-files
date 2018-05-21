@@ -207,8 +207,8 @@ test('index.js - output', async function (t) {
     app.close()
 
     t.deepEqual(output, [
-      `${chalk.gray('[serve-files]')} ${chalk.green('\u276F')} server is listening at port ${port}\n`,
-      `${chalk.gray('[serve-files]')} ${chalk.green('\u276F')} GET / ${chalk.gray('200')}\n`
+      `${chalk.gray('[serve-files]')} server is listening at port ${port}\n`,
+      `${chalk.gray('[serve-files]')} GET / ${chalk.gray('200')}\n`
     ])
   })
 })

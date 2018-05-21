@@ -66,7 +66,7 @@ module.exports = function (deps) {
 
       const app = express()
 
-      app.use(morgan(`${chalk.gray('[serve-files]')} ${chalk.green('\u276F')} :method :url :status`, {
+      app.use(morgan(`${chalk.gray('[serve-files]')} :method :url :status`, {
         stream: deps.out
       }))
 
@@ -98,7 +98,7 @@ module.exports = function (deps) {
             return
           }
 
-          deps.out.write(`${chalk.gray('[serve-files]')} ${chalk.green('\u276F')} server is listening at port ${port}\n`)
+          deps.out.write(`${chalk.gray('[serve-files]')} server is listening at port ${port}\n`)
 
           if (args.open) {
             const options = {}
