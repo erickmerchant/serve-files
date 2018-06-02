@@ -17,7 +17,7 @@ module.exports = function (deps) {
   return function ({parameter, option}) {
     parameter('directory', {
       description: 'the directory to serve files from',
-      type: function (val) {
+      type: function directory (val) {
         if (val == null) {
           return '.'
         }
