@@ -30,7 +30,7 @@ module.exports = function (deps) {
       description: 'the port to listen at',
       type: function number (val) {
         if (val == null) {
-          return null
+          return getPort()
         }
 
         return Number(val)
@@ -48,7 +48,6 @@ module.exports = function (deps) {
     return function (args) {
       let status
       let file
-      let port
 
       if (args['200']) {
         status = 200
@@ -56,12 +55,6 @@ module.exports = function (deps) {
       } else {
         status = 404
         file = '404.html'
-      }
-
-      if (!args.port) {
-        port = getPort()
-      } else {
-        port = Promise.resolve(Number(args.port))
       }
 
       const app = express()
@@ -90,24 +83,22 @@ module.exports = function (deps) {
         }
       })
 
-      return port.then(function (port) {
-        return app.listen(port, function (err) {
-          if (err) {
-            error(err)
+      return app.listen(args.port, function (err) {
+        if (err) {
+          error(err)
 
-            return
-          }
+          return
+        }
 
-          deps.out.write(`${chalk.gray('[serve-files]')} server is listening at port ${port}\n`)
+        deps.out.write(`${chalk.gray('[serve-files]')} server is listening at port ${args.port}\n`)
 
-          if (args.open) {
-            const options = {}
+        if (args.open) {
+          const options = {}
 
-            deps.open(`http://localhost:${port}`, options).catch(error)
-          }
-        })
-          .on('error', error)
+          deps.open(`http://localhost:${args.port}`, options).catch(error)
+        }
       })
+        .on('error', error)
     }
   }
 }

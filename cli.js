@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 const command = require('sergeant')
 const serve = require('./index')
 const open = require('opn')

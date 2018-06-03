@@ -137,24 +137,6 @@ test('index.js - default no html', function (t) {
   })
 })
 
-test('index.js - get port', async function (t) {
-  t.plan(1)
-
-  const app = await require('./index')(noopDeps)(noopDefiners)({port: false, directory: './fixtures/'})
-
-  process.nextTick(async function () {
-    try {
-      const response = await got(`http://localhost:${app.address().port}/`)
-
-      t.equal('<h1>index</h1>\n', response.body)
-    } catch (e) {
-      t.error(e)
-    }
-
-    app.close()
-  })
-})
-
 test('index.js - open in browser', async function (t) {
   t.plan(2)
 
