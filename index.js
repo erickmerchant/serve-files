@@ -29,7 +29,7 @@ module.exports = function (deps) {
       description: 'the port to listen at',
       required: true,
       type: function number (val) {
-        return Number(val)
+        return val != null ? Number(val) : null
       }
     })
 
