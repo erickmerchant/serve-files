@@ -1,7 +1,6 @@
 const express = require('express')
 const morgan = require('morgan')
 const compression = require('compression')
-const getPort = require('get-port')
 const chalk = require('chalk')
 const path = require('path')
 const assert = require('assert')
@@ -28,11 +27,8 @@ module.exports = function (deps) {
 
     option('port', {
       description: 'the port to listen at',
+      required: true,
       type: function number (val) {
-        if (val == null) {
-          return getPort()
-        }
-
         return Number(val)
       }
     })
