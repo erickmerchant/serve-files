@@ -25,7 +25,7 @@
     "express": "^4.16.3",
     "morgan": "^1.9.0",
     "opn": "^5.3.0",
-    "sergeant": "^20.1.0"
+    "sergeant": "^20.2.0"
   },
   "devDependencies": {
     "execa": "^0.10.0",
