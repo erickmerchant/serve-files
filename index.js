@@ -29,7 +29,7 @@ module.exports = function (deps) {
       description: 'the port to listen at',
       required: true,
       type: function number (val) {
-        return val != null ? Number(val) : null
+        return val != null ? Number(val) : 0
       }
     })
 
@@ -38,7 +38,7 @@ module.exports = function (deps) {
     })
 
     option('200', {
-      description: 'serve the index page for html responses'
+      description: 'serve a 200.html file by default'
     })
 
     return function (args) {
@@ -47,7 +47,7 @@ module.exports = function (deps) {
 
       if (args['200']) {
         status = 200
-        file = 'index.html'
+        file = '200.html'
       } else {
         status = 404
         file = '404.html'
@@ -79,22 +79,26 @@ module.exports = function (deps) {
         }
       })
 
-      return app.listen(args.port, function (err) {
+      const listener = app.listen(args.port, function (err) {
+        const port = listener.address().port
+
         if (err) {
           error(err)
 
           return
         }
 
-        deps.out.write(`${chalk.gray('[serve-files]')} server is listening at port ${args.port}\n`)
+        deps.out.write(`${chalk.gray('[serve-files]')} server is listening at port ${port}\n`)
 
         if (args.open) {
           const options = {}
 
-          deps.open(`http://localhost:${args.port}`, options).catch(error)
+          deps.open(`http://localhost:${port}`, options).catch(error)
         }
       })
         .on('error', error)
+
+      return listener
     }
   }
 }

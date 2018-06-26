@@ -107,7 +107,7 @@ test('index.js - default 200', function (t) {
 
     t.equal('text/html; charset=utf-8', response.headers['content-type'].toLowerCase())
 
-    t.equal('<h1>index</h1>\n', response.body)
+    t.equal('<h1>200</h1>\n', response.body)
 
     app.close()
   })
