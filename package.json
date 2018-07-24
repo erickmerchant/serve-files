@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "execa": "^0.10.0",
-    "get-port": "^3.2.0",
+    "get-port": "^4.0.0",
     "got": "^8.3.2",
     "standard": "^11.0.1",
     "tape": "^4.9.1"
