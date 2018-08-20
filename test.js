@@ -59,6 +59,32 @@ test('index.js - default response', function (t) {
   })
 })
 
+test('index.js - json directory listing', function (t) {
+  t.plan(3)
+
+  getPort().then(async function (port) {
+    const app = await require('./index')(noopDeps)({port, directory: './fixtures/'})
+
+    try {
+      const response = await got(`http://localhost:${port}/dir/`, {
+        headers: {
+          accept: 'application/json,*,*'
+        }
+      })
+
+      t.equal(200, response.statusCode)
+
+      t.equal('application/json; charset=utf-8', response.headers['content-type'].toLowerCase())
+
+      t.deepEqual(['/dir/a.txt', '/dir/b.txt', '/dir/c.txt'], JSON.parse(response.body))
+    } catch (e) {
+      t.error(e)
+    }
+
+    app.close()
+  })
+})
+
 test('index.js - default 200', function (t) {
   t.plan(3)
 
@@ -90,7 +116,7 @@ test('index.js - default no html', function (t) {
     try {
       await got(`http://localhost:${port}/does-not-exist.html`, {
         headers: {
-          accept: 'application/json,*/*'
+          accept: 'text/plain,*/*'
         }
       })
     } catch (e) {

@@ -3,8 +3,12 @@ const morgan = require('morgan')
 const compression = require('compression')
 const chalk = require('chalk')
 const path = require('path')
+const fs = require('fs')
+const promisify = require('util').promisify
 const assert = require('assert')
 const error = require('sergeant/error')
+const stat = promisify(fs.stat)
+const readdir = promisify(fs.readdir)
 
 module.exports = function (deps) {
   assert.ok(deps.out)
@@ -35,20 +39,39 @@ module.exports = function (deps) {
 
     app.use(express.static(args.directory))
 
-    app.use(function (req, res) {
-      if (req.accepts(['text/plain', 'text/html']) === 'text/html') {
-        res.status(status)
+    app.use(async function (req, res, next) {
+      switch (req.accepts(['application/json', 'text/html', 'text/plain'])) {
+        case 'text/html':
+          res.status(status)
 
-        res.sendFile(path.resolve(args.directory, file), {}, function (err) {
-          if (err) {
-            res.type('text/html').send('')
+          res.sendFile(path.resolve(args.directory, file), {}, function (err) {
+            if (err) {
+              next(err)
+            }
+          })
+          break
+        case 'application/json':
+          try {
+            const stats = await stat(path.resolve(path.join(args.directory, req.path)))
+
+            if (stats.isDirectory()) {
+              const list = await readdir(path.resolve(path.join(args.directory, req.path)))
+
+              res.contentType('application/json').status(200).send(list.map((item) => path.join(req.path, item)))
+
+              return
+            }
+          } catch (err) {
+            res.contentType('application/json').status(404).send('')
           }
-        })
-      } else {
-        res.status(404)
-
-        res.type('text/plain').send('')
+          break
+        default:
+          res.contentType('text/plain').status(404).send('')
       }
+    })
+
+    app.use(function (err, req, res, next) {
+      res.contentType('text/plain').status(err.status).send('')
     })
 
     const listener = app.listen(args.port, function (err) {
