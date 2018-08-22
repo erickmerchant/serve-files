@@ -52,17 +52,20 @@ module.exports = function (deps) {
           break
         case 'application/json':
           try {
-            const stats = await stat(path.resolve(path.join(args.directory, req.path)))
+            res.contentType('application/json')
+
+            const dir = path.resolve(path.join(args.directory, req.path))
+            const stats = await stat(dir)
 
             if (stats.isDirectory()) {
-              const list = await readdir(path.resolve(path.join(args.directory, req.path)))
+              const list = await readdir(dir)
 
-              res.contentType('application/json').status(200).send(list.map((item) => path.join(req.path, item)))
+              res.status(200).send(list.map((item) => path.join(req.path, item)))
 
               return
             }
           } catch (err) {
-            res.contentType('application/json').status(404).send('')
+            res.status(404).send('')
           }
           break
         default:
