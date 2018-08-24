@@ -30,7 +30,7 @@
   "devDependencies": {
     "execa": "^0.11.0",
     "get-port": "^4.0.0",
-    "got": "^9.0.0",
+    "got": "^9.1.0",
     "standard": "^11.0.1",
     "tape": "^4.9.1"
   }
