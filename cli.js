@@ -5,7 +5,7 @@ const serve = require('./index')
 const open = require('opn')
 const out = process.stdout
 
-command('serve-files', ({option, parameter}) => {
+command('serve-files', ({ option, parameter }) => {
   parameter('directory', {
     description: 'the directory to serve files from',
     type (val = '.') {
@@ -29,5 +29,5 @@ command('serve-files', ({option, parameter}) => {
     description: 'serve a 200.html file by default'
   })
 
-  return (args) => serve({open, out})(args)
+  return (args) => serve({ open, out })(args)
 })(process.argv.slice(2))

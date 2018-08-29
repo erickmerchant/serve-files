@@ -17,7 +17,7 @@ test('index.js - good response', function (t) {
   t.plan(3)
 
   getPort().then(async function (port) {
-    const app = await require('./index')(noopDeps)({port, directory: './fixtures/'})
+    const app = await require('./index')(noopDeps)({ port, directory: './fixtures/' })
 
     try {
       const response = await got(`http://localhost:${port}/`)
@@ -39,7 +39,7 @@ test('index.js - default response', function (t) {
   t.plan(3)
 
   getPort().then(async function (port) {
-    const app = await require('./index')(noopDeps)({port, directory: './fixtures/'})
+    const app = await require('./index')(noopDeps)({ port, directory: './fixtures/' })
 
     try {
       await got(`http://localhost:${port}/does-not-exist.html`, {
@@ -63,7 +63,7 @@ test('index.js - default 200', function (t) {
   t.plan(3)
 
   getPort().then(async function (port) {
-    const app = await require('./index')(noopDeps)({port, directory: './fixtures/', '200': true})
+    const app = await require('./index')(noopDeps)({ port, directory: './fixtures/', '200': true })
 
     const response = await got(`http://localhost:${port}/does-not-exist.html`, {
       headers: {
@@ -92,7 +92,7 @@ test('index.js - open in browser', async function (t) {
 
         return Promise.resolve()
       }
-    })({port, directory: './fixtures/', open: true})
+    })({ port, directory: './fixtures/', open: true })
 
     try {
       const response = await got(`http://localhost:${port}/`)
@@ -122,7 +122,7 @@ test('index.js - output', async function (t) {
     const app = await require('./index')({
       out,
       open () { return Promise.resolve() }
-    })({port, directory: './fixtures/'})
+    })({ port, directory: './fixtures/' })
 
     try {
       await got(`http://localhost:${app.address().port}/`)

@@ -9,9 +9,9 @@ const error = require('sergeant/error')
 module.exports = function (deps) {
   assert.ok(deps.out)
 
-  assert.equal(typeof deps.out.write, 'function')
+  assert.strictEqual(typeof deps.out.write, 'function')
 
-  assert.equal(typeof deps.open, 'function')
+  assert.strictEqual(typeof deps.open, 'function')
 
   return function (args) {
     let status
