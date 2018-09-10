@@ -6,14 +6,14 @@ const path = require('path')
 const assert = require('assert')
 const error = require('sergeant/error')
 
-module.exports = function (deps) {
+module.exports = (deps) => {
   assert.ok(deps.out)
 
   assert.strictEqual(typeof deps.out.write, 'function')
 
   assert.strictEqual(typeof deps.open, 'function')
 
-  return function (args) {
+  return (args) => {
     let status
     let file
 
@@ -35,21 +35,21 @@ module.exports = function (deps) {
 
     app.use(express.static(args.directory))
 
-    app.use(function (req, res, next) {
+    app.use((req, res, next) => {
       res.status(status)
 
-      res.sendFile(path.resolve(args.directory, file), {}, function (err) {
+      res.sendFile(path.resolve(args.directory, file), {}, (err) => {
         if (err) {
           next(err)
         }
       })
     })
 
-    app.use(function (err, req, res, next) {
+    app.use((err, req, res, next) => {
       res.contentType('text/plain').status(err.status).send('')
     })
 
-    const listener = app.listen(args.port, function (err) {
+    const listener = app.listen(args.port, (err) => {
       const port = listener.address().port
 
       if (err) {
