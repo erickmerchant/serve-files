@@ -1,10 +1,15 @@
-const express = require('express')
+const polka = require('polka')
 const morgan = require('morgan')
 const compression = require('compression')
+const serve = require('serve-static')
 const chalk = require('chalk')
 const path = require('path')
 const assert = require('assert')
 const error = require('sergeant/error')
+const fs = require('fs')
+const promisify = require('util').promisify
+
+const readFile = promisify(fs.readFile)
 
 module.exports = (deps) => {
   assert.ok(deps.out)
@@ -13,7 +18,7 @@ module.exports = (deps) => {
 
   assert.strictEqual(typeof deps.open, 'function')
 
-  return (args) => {
+  return async (args) => {
     let status
     let file
 
@@ -25,7 +30,15 @@ module.exports = (deps) => {
       file = '404.html'
     }
 
-    const app = express()
+    const app = polka({
+      onError (err, req, res) {
+        error(err)
+
+        res.writeHead(500, { 'content-type': 'text/plain; charset=utf-8' })
+
+        res.end('')
+      }
+    })
 
     app.use(morgan(`${chalk.gray('[serve-files]')} :method :url :status`, {
       stream: deps.out
@@ -33,41 +46,36 @@ module.exports = (deps) => {
 
     app.use(compression())
 
-    app.use(express.static(args.directory))
+    app.use(serve(args.directory))
 
-    app.use((req, res, next) => {
-      res.status(status)
+    app.use(async (req, res, next) => {
+      try {
+        let fileContent = await readFile(path.resolve(args.directory, file), 'utf-8')
 
-      res.sendFile(path.resolve(args.directory, file), {}, (err) => {
-        if (err) {
-          next(err)
-        }
-      })
-    })
+        res.writeHead(status, { 'content-type': 'text/html; charset=utf-8' })
 
-    app.use((err, req, res, next) => {
-      res.contentType('text/plain').status(err.status).send('')
-    })
+        res.end(fileContent)
+      } catch (err) {
+        res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' })
 
-    const listener = app.listen(args.port, (err) => {
-      const port = listener.address().port
-
-      if (err) {
-        error(err)
-
-        return
+        res.end('')
       }
+    })
 
-      deps.out.write(`${chalk.gray('[serve-files]')} server is listening at port ${port}\n`)
+    try {
+      await app.listen(args.port)
+
+      deps.out.write(`${chalk.gray('[serve-files]')} server is listening at port ${args.port}\n`)
 
       if (args.open) {
         const options = {}
 
-        deps.open(`http://localhost:${port}`, options).catch(error)
+        deps.open(`http://localhost:${args.port}`, options).catch(error)
       }
-    })
-      .on('error', error)
+    } catch (err) {
+      error(err)
+    }
 
-    return listener
+    return app
   }
 }

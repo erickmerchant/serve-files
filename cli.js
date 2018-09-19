@@ -16,8 +16,8 @@ command('serve-files', ({ option, parameter }) => {
   option('port', {
     description: 'the port to listen at',
     required: true,
-    type (val = 0) {
-      return Number(val)
+    type (val) {
+      return val ? Number(val) : null
     }
   })
 

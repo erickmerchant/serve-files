@@ -32,7 +32,7 @@ test('index.js - good response', async (t) => {
     t.error(e)
   }
 
-  app.close()
+  app.server.close()
 })
 
 test('index.js - default response', async (t) => {
@@ -56,7 +56,7 @@ test('index.js - default response', async (t) => {
     t.equal('<h1>404</h1>\n', e.response.body)
   }
 
-  app.close()
+  app.server.close()
 })
 
 test('index.js - default 200', async (t) => {
@@ -78,7 +78,7 @@ test('index.js - default 200', async (t) => {
 
   t.equal('<h1>200</h1>\n', response.body)
 
-  app.close()
+  app.server.close()
 })
 
 test('index.js - open in browser', async (t) => {
@@ -103,7 +103,7 @@ test('index.js - open in browser', async (t) => {
     t.error(e)
   }
 
-  app.close()
+  app.server.close()
 })
 
 test('index.js - output', async (t) => {
@@ -126,12 +126,12 @@ test('index.js - output', async (t) => {
   })({ port, directory: './fixtures/' })
 
   try {
-    await got(`http://localhost:${app.address().port}/`)
+    await got(`http://localhost:${port}/`)
   } catch (e) {
     t.error(e)
   }
 
-  app.close()
+  app.server.close()
 
   t.deepEqual(output, [
     `${chalk.gray('[serve-files]')} server is listening at port ${port}\n`,

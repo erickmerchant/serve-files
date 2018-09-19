@@ -1,6 +1,6 @@
 # @erickmerchant/serve-files
 
-A handy static server for development written with express. Point it to a directory. Optionally specify a port. Also optionally have it open a browser when it's ready.
+A handy static server for development written with polka. Point it to a directory and specify a port. Also optionally have it open a browser when it's ready.
 
 ## Install
 
