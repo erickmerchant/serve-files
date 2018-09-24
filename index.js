@@ -62,19 +62,18 @@ module.exports = (deps) => {
       }
     })
 
-    try {
-      await app.listen(args.port)
+    app.listen(args.port, (err) => {
+      if (err) error(err)
+      else {
+        deps.out.write(`${chalk.gray('[serve-files]')} server is listening at port ${args.port}\n`)
 
-      deps.out.write(`${chalk.gray('[serve-files]')} server is listening at port ${args.port}\n`)
+        if (args.open) {
+          const options = {}
 
-      if (args.open) {
-        const options = {}
-
-        deps.open(`http://localhost:${args.port}`, options).catch(error)
+          deps.open(`http://localhost:${args.port}`, options).catch(error)
+        }
       }
-    } catch (err) {
-      error(err)
-    }
+    })
 
     return app
   }
