@@ -7,7 +7,7 @@
     "serve-files": "./cli.js"
   },
   "scripts": {
-    "test": "standard && tape test.js"
+    "test": "tasks standard 'tape test.js'"
   },
   "repository": {
     "type": "git",
@@ -29,6 +29,7 @@
     "serve-static": "^1.13.2"
   },
   "devDependencies": {
+    "@erickmerchant/tasks": "^0.2.0",
     "execa": "^1.0.0",
     "get-port": "^4.0.0",
     "got": "^9.2.2",
