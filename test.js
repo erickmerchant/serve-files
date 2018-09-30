@@ -25,7 +25,7 @@ test('index.js - good response', async (t) => {
 
     t.equal(200, response.statusCode)
 
-    t.equal('text/html; charset=utf-8', response.headers['content-type'].toLowerCase())
+    t.equal('text/html', response.headers['content-type'].toLowerCase())
 
     t.equal('<h1>index</h1>\n', response.body)
   } catch (e) {
@@ -51,7 +51,7 @@ test('index.js - default response', async (t) => {
   } catch (e) {
     t.equal(404, e.response.statusCode)
 
-    t.equal('text/html; charset=utf-8', e.response.headers['content-type'].toLowerCase())
+    t.equal('text/html', e.response.headers['content-type'].toLowerCase())
 
     t.equal('<h1>404</h1>\n', e.response.body)
   }
@@ -74,7 +74,7 @@ test('index.js - default 200', async (t) => {
 
   t.equal(200, response.statusCode)
 
-  t.equal('text/html; charset=utf-8', response.headers['content-type'].toLowerCase())
+  t.equal('text/html', response.headers['content-type'].toLowerCase())
 
   t.equal('<h1>200</h1>\n', response.body)
 

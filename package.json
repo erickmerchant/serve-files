@@ -25,8 +25,8 @@
     "morgan": "^1.9.1",
     "opn": "^5.4.0",
     "polka": "^0.5.1",
-    "sergeant": "^22.1.0",
-    "serve-static": "^1.13.2"
+    "sergeant": "^22.1.1",
+    "sirv": "^0.2.2"
   },
   "devDependencies": {
     "@erickmerchant/tasks": "^0.2.0",

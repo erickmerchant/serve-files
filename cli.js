@@ -25,6 +25,10 @@ command('serve-files', ({ option, parameter }) => {
     description: 'open it'
   })
 
+  option('dev', {
+    description: 'allow new files to be served'
+  })
+
   option('200', {
     description: 'serve a 200.html file by default'
   })

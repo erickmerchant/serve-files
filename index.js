@@ -1,15 +1,13 @@
 const polka = require('polka')
 const morgan = require('morgan')
 const compression = require('compression')
-const serve = require('serve-static')
+const sirv = require('sirv')
 const chalk = require('chalk')
 const path = require('path')
 const assert = require('assert')
 const error = require('sergeant/error')
 const fs = require('fs')
-const promisify = require('util').promisify
-
-const readFile = promisify(fs.readFile)
+const createReadStream = fs.createReadStream
 
 module.exports = (deps) => {
   assert.ok(deps.out)
@@ -46,17 +44,18 @@ module.exports = (deps) => {
 
     app.use(compression())
 
-    app.use(serve(args.directory))
+    app.use(sirv(args.directory, {
+      etag: true,
+      dev: args.dev
+    }))
 
     app.use(async (req, res, next) => {
       try {
-        let fileContent = await readFile(path.resolve(args.directory, file), 'utf-8')
+        res.writeHead(status, { 'content-type': 'text/html' })
 
-        res.writeHead(status, { 'content-type': 'text/html; charset=utf-8' })
-
-        res.end(fileContent)
+        createReadStream(path.resolve(args.directory, file), 'utf-8').pipe(res)
       } catch (err) {
-        res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' })
+        res.writeHead(200, { 'content-type': 'text/html' })
 
         res.end('')
       }
