@@ -25,11 +25,11 @@
     "morgan": "^1.9.1",
     "opn": "^5.4.0",
     "polka": "^0.5.1",
-    "sergeant": "^22.1.1",
+    "sergeant": "^22.1.2",
     "sirv": "^0.2.2"
   },
   "devDependencies": {
-    "@erickmerchant/tasks": "^0.2.0",
+    "@erickmerchant/tasks": "^0.3.0",
     "execa": "^1.0.0",
     "get-port": "^4.0.0",
     "got": "^9.2.2",
