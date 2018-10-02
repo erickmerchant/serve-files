@@ -6,7 +6,9 @@ const chalk = require('chalk')
 const path = require('path')
 const assert = require('assert')
 const error = require('sergeant/error')
+const promisify = require('util').promisify
 const fs = require('fs')
+const access = promisify(fs.access)
 const createReadStream = fs.createReadStream
 
 module.exports = (deps) => {
@@ -19,13 +21,26 @@ module.exports = (deps) => {
   return async (args) => {
     let status
     let file
+    let exists
 
     if (args['200']) {
       status = 200
-      file = '200.html'
+      file = path.resolve(args.directory, '200.html')
     } else {
       status = 404
-      file = '404.html'
+      file = path.resolve(args.directory, '404.html')
+    }
+
+    if (!args.dev) {
+      try {
+        await access(file, fs.constants.R_OK)
+
+        exists = true
+      } catch (err) {
+        error(err)
+
+        exists = false
+      }
     }
 
     const app = polka({
@@ -46,19 +61,32 @@ module.exports = (deps) => {
 
     app.use(sirv(args.directory, {
       etag: true,
-      dev: args.dev
+      dev: args.dev,
+      onNoMatch () {
+        console.log(arguments)
+      }
     }))
 
     app.use(async (req, res, next) => {
       try {
-        res.writeHead(status, { 'content-type': 'text/html' })
+        if (exists == null) {
+          await access(file, fs.constants.R_OK)
+        }
 
-        createReadStream(path.resolve(args.directory, file), 'utf-8').pipe(res)
+        if (exists == null || exists) {
+          res.writeHead(status, { 'content-type': 'text/html' })
+
+          createReadStream(file, 'utf-8').pipe(res)
+
+          return
+        }
       } catch (err) {
-        res.writeHead(200, { 'content-type': 'text/html' })
-
-        res.end('')
+        error(err)
       }
+
+      res.statusCode = 500
+
+      res.end()
     })
 
     app.listen(args.port, (err) => {
