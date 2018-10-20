@@ -18,7 +18,7 @@ module.exports = (deps) => {
 
   assert.strictEqual(typeof deps.open, 'function')
 
-  return async (args) => {
+  return async (args, cb = () => {}) => {
     let status
     let file
     let exists
@@ -90,8 +90,11 @@ module.exports = (deps) => {
     })
 
     app.listen(args.port, (err) => {
-      if (err) error(err)
-      else {
+      if (err) {
+        error(err)
+
+        cb(err)
+      } else {
         deps.out.write(`${chalk.gray('[serve-files]')} server is listening at port ${args.port}\n`)
 
         if (args.open) {
@@ -99,9 +102,9 @@ module.exports = (deps) => {
 
           deps.open(`http://localhost:${args.port}`, options).catch(error)
         }
+
+        cb(null, app)
       }
     })
-
-    return app
   }
 }
