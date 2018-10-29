@@ -25,7 +25,7 @@
     "morgan": "^1.9.1",
     "opn": "^5.4.0",
     "polka": "^0.5.1",
-    "sergeant": "^22.2.0",
+    "sergeant": "^22.2.1",
     "sirv": "^0.2.2"
   },
   "devDependencies": {
